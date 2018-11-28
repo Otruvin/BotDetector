@@ -7,10 +7,49 @@ $(document).ready(function(){
     var width_banner;
     var click_coord_X;
     var click_coord_Y;
+    var move_mouse_position_x;
+    var move_mouse_position_y;
+
 
     $.getJSON('https://api.ipify.org?format=json', function(data){
         ip_client = data.ip;
     });
+    
+    window.onmousemove = function(e) {
+    	move_mouse_position_x = e.pageX;
+    	move_mouse_position_y = e.pageY;
+    }
+    
+    setInterval(function() {
+    	
+    	var mousePositionInfo = {
+    			pageName : page,
+    			mouseCoordX : move_mouse_position_x,
+    			mouseCoordY : move_mouse_position_y,
+    			ipClient : ip_client
+    	}
+    	
+    	$.ajax({
+    		type : "POST",
+        	contentType : "application/json",
+        	url : "/clickManage/sendMoveMouseData",
+        	data : JSON.stringify(mousePositionInfo),
+        	dataType : 'json',
+        	success : function(result) {
+        		if(result.status == "Done"){
+        			console.log("Good, all sended");
+        		}else {
+        			console.log("Send error");
+        		}
+        		console.log(result);
+        	},
+        	error : function(event) {
+        		alert("Error!")
+        		console.log("ERROR: ", event);
+        	}
+    	});
+    },1000);
+    
 
     $('div.banner').live('click', function(e) { 
     	var date = new Date();
@@ -34,17 +73,49 @@ $(document).ready(function(){
         		ipClient: ip_client
         }
         
+        var userInfo = {
+        		ipUser : ip_client,
+        		browserCodeName : navigator.appCodeName,
+        		browserName : navigator.appName,
+        		brouserVersion : navigator.appVersion,
+        		cookiesEnabled : navigator.cookieEnabled,
+        		browserLanguage : navigator.language,
+        		browserOnline : navigator.onLine,
+        		platform : navigator.platform,
+        		userAgentHeader : navigator.userAgent
+        }
+        
         console.log(window.location);
         
         $.ajax({
         	type : "POST",
+        	contentType : "application/json",
+        	url : "/clickManage/sendUserData",
+        	data : JSON.stringify(userInfo),
+        	dataType : 'json',
+        	success : function(result) {
+        		if(result.status == "Done"){
+        			console.log("Good, all sended");
+        		}else {
+        			console.log("Send error");
+        		}
+        		console.log(result);
+        	},
+        	error : function(event) {
+        		alert("Error!")
+        		console.log("ERROR: ", event);
+        	}
+        });
+        
+        $.ajax({
+        	type : "POST",
 			contentType : "application/json",
-			url : "/clickManage/sendData",
+			url : "/clickManage/sendClickData",
 			data : JSON.stringify(clickInfo),
 			dataType : 'json',
 			success : function(result) {
 				if(result.status == "Done"){
-					console.log("God, all sended");
+					console.log("Good, all sended");
 				}else{
 					console.log("Send error");
 				}
@@ -56,7 +127,7 @@ $(document).ready(function(){
 			}
         });
         
-    });
+    }); //
 
 });
 
