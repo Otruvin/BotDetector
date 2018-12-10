@@ -2,10 +2,9 @@ package com.training.demo.controllers;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,10 +24,34 @@ public class ControllerSendClicksInfo {
 	private static final String urlDb = "jdbc:clickhouse://localhost:8123/clicksDB";
 	private Connection connect;
 	
-	@GetMapping(value = "/getSendedUsers")
-	public String getSendedData()
-	{	 
-		return "Done";
+	@GetMapping(value = "/getMoveMouseData")
+	public String getMoveMouseInfo() throws SQLException
+	{
+		connect = DriverManager.getConnection(urlDb);
+		String query = "SELECT * FROM moveMouse";
+		Statement statement = connect.createStatement();
+		ResultSet resultSet = statement.executeQuery(query);
+		return "Данные по кликам были занесены в логовый файл";
+	}
+	
+	@GetMapping(value = "/getClicksData")
+	public String getClicksInfo() throws SQLException
+	{
+		connect = DriverManager.getConnection(urlDb);
+		String query = "SELECT * FROM clicks";
+		Statement statement = connect.createStatement();
+		ResultSet resultSet = statement.executeQuery(query);	
+		return "Данные по кликам были занесены в логовый файл";
+	}
+	
+	@GetMapping(value = "/getUserData")
+	public String getUserInfo() throws SQLException
+	{
+		connect = DriverManager.getConnection(urlDb);
+		String query = "SELECT * FROM usrData";
+		Statement statement = connect.createStatement();
+		ResultSet resultSet = statement.executeQuery(query);
+		return "Данные по пользователям скопированы в логовый файл";
 	}
 	
 	@PostMapping(value = "/sendClickData")
