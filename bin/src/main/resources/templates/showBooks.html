@@ -11,6 +11,29 @@
 </head>
 <body>
 
+	<h2>List with books</h2>
+	
+	<table>
+	
+		<tr>
+			<th>Id</th>
+			<th>Name</th>
+			<th>Author</th>
+			<th>Coast</th>
+		</tr>
+		
+		<tr th:each = "book : ${books}">
+			<td th:text = "${book.id}">Id</td>
+			<td th:text = "${book.name}">Name</td>
+			<td th:text = "${book.author}">Author</td>
+			<td th:text = "${book.coast}">Coast</td>
+		</tr>
+	
+	</table>
+	
+	<br><br>
+	
+	
 	<div class="banner" id="banner1" style="height:500px; width:200px; background:red; display: inline-block;" >
 		<p>banner1</p>
 	</div>
