@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.training.demo.entity.Click;
+import com.training.demo.entity.EnterData;
 import com.training.demo.entity.MousePositionData;
 import com.training.demo.entity.Response;
 import com.training.demo.entity.User;
@@ -23,6 +24,21 @@ public class ControllerSendClicksInfo {
 	
 	private static final String urlDb = "jdbc:clickhouse://localhost:8123/clicksDB";
 	private Connection connect;
+	
+	@PostMapping(value = "/sendEnteredData")
+	public Response sendEnteredData(@RequestBody EnterData enterData) throws SQLException
+	{
+		Response response = new Response("Done", enterData);
+		
+		connect = DriverManager.getConnection(urlDb);
+		String query = "insert into enterData values ( '" + enterData.getDateEnter() 
+		+ "', '" + enterData.getDateTimeEnter() + "', '" + enterData.getIpUser() + "');";
+		
+		Statement statement = connect.createStatement();
+		statement.executeQuery(query);
+		System.out.println("Info entered added to db");
+		return response;
+	}
 	
 	@PostMapping(value = "/sendClickData")
 	public Response sendInfo(@RequestBody Click click) throws SQLException
