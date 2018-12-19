@@ -24,4 +24,9 @@ public class MainController {
 		return "showBooks";
 		
 	}
+	
+	@RequestMapping("/botCheckPg")
+	public String checkPage()  {
+		return "CheckBotPage";
+	}
 }

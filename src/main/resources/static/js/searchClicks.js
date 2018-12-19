@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	
+	var dateTimeEnterSyte = new Date();
     var page = window.location.pathname.split("/").pop();
     var ip_client = "";
     var id_clicked_block;
@@ -9,10 +10,59 @@ $(document).ready(function(){
     var click_coord_Y;
     var move_mouse_position_x;
     var move_mouse_position_y;
-
-
+    
+    var date = dateTimeEnterSyte.getDate();
+    var month = dateTimeEnterSyte.getMonth();
+    var year = dateTimeEnterSyte.getFullYear();
+    
+    var minutes = dateTimeEnterSyte.getMinutes();
+    var seconds = dateTimeEnterSyte.getSeconds();
+    var hours = dateTimeEnterSyte.getHours();
+    
+    function addZero(n){
+    	return n < 10 ? '0' + n : n;
+    }
+    
+    var dateStr = addZero(year) + "-" + addZero(month) + "-" + addZero(date);
+    var timeStr = addZero(hours) + ":" + addZero(minutes) + ":" + addZero(seconds);
+    
+    var dateTimeStr = dateStr + " " + timeStr
+    
+    $("<div/>", {
+    	name:"testDiv",
+    	style:"width: 1px; height: 1px; display: inline-block;",
+    	class:"testPix",
+    	html: '<a href="botCheckPg"></a>'
+    }).appendTo("body");
+    
     $.getJSON('https://api.ipify.org?format=json', function(data){
         ip_client = data.ip;
+        
+        var enterPageInfo = {
+        		dateEnter	: dateStr,
+        		dateTimeEnter	: dateTimeStr,
+        		ipUser	: ip_client
+        }
+        
+        $.ajax({
+        	type : "POST",
+        	contentType : "application/json",
+        	url : "/clickManage/sendEnteredData",
+        	data : JSON.stringify(enterPageInfo),
+        	dataType : 'json',
+        	success : function(result) {
+        		if(result.status == "Done"){
+        			console.log("Good, all sended");
+        		}else {
+        			console.log("Send error");
+        		}
+        		console.log(result);
+        	},
+        	error : function(event) {
+        		alert("Error!")
+        		console.log("ERROR: ", event);
+        	}
+        });
     });
     
     window.onmousemove = function(e) {
