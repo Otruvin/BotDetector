@@ -3,8 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<p>You are bot</p>
+	<script type="text/javascript">
+		
+		var ip_client = "";
+		var mapping = window.location.pathname.split("/").pop();
+		
+		$.getJSON('https://api.ipify.org?format=json', function(data){
+	        ip_client = data.ip;
+	        
+	        var enterPageData = {
+	        	mapping	: mapping,
+	        	ipUser	: ip_client
+	    	}
+	        
+	        $.ajax({
+	        	type : "POST",
+	        	contentType : "application/json",
+	        	url : "/clickManage/sendDataUserFromTestPage",
+	        	data : JSON.stringify(enterPageData),
+	        	dataType : 'json',
+	        	success : function(result) {
+	        		if(result.status == "Done"){
+	        			console.log("Good, all sended");
+	        		}else {
+	        			console.log("Send error");
+	        		}
+	        		console.log(result);
+	        	},
+	        	error : function(event) {
+	        		alert("Error!")
+	        		console.log("ERROR: ", event);
+	        	}
+	        })
+		})
+	        
+	</script>
 </body>
 </html>

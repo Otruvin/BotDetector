@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.training.demo.entity.Click;
+import com.training.demo.entity.ClickTestDivInfo;
 import com.training.demo.entity.EnterData;
+import com.training.demo.entity.EnterTestPageInfo;
 import com.training.demo.entity.MousePositionData;
 import com.training.demo.entity.Response;
 import com.training.demo.entity.User;
@@ -24,6 +26,35 @@ public class ControllerSendClicksInfo {
 	
 	private static final String urlDb = "jdbc:clickhouse://localhost:8123/clicksDB";
 	private Connection connect;
+	
+	@PostMapping(value = "/sendInfoClickTestDiv")
+	public Response sendInfoClickTestDiv(@RequestBody ClickTestDivInfo clickTestInfo) throws SQLException
+	{
+		Response response = new Response("Done", clickTestInfo);
+		
+		connect = DriverManager.getConnection(urlDb);
+		String query = "insert into clickOnTestDivInfo values ( toDate(now()), toDateTime(now()), '" +
+						clickTestInfo.getIpUser() + "');";
+		Statement statement = connect.createStatement();
+		statement.executeQuery(query);
+		System.out.println("Test div click info sended");
+		return response;
+	}
+	
+	@PostMapping(value = "/sendDataUserFromTestPage")
+	public Response sendInfoFromTestPage(@RequestBody EnterTestPageInfo enterTestPageInfo) throws SQLException
+	{
+		Response response = new Response("Done", enterTestPageInfo);
+		
+		connect = DriverManager.getConnection(urlDb);
+		String query = "insert into enterTestPInfo values ( toDate(now()), '"
+		+ enterTestPageInfo.getMapping() + "', '" + enterTestPageInfo.getIpUser() + "');";
+		
+		Statement statement = connect.createStatement();
+		statement.executeQuery(query);
+		System.out.println("Test page info user");
+		return response;
+	}
 	
 	@PostMapping(value = "/sendEnteredData")
 	public Response sendEnteredData(@RequestBody EnterData enterData) throws SQLException

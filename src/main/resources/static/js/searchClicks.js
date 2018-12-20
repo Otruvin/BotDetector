@@ -33,6 +33,15 @@ $(document).ready(function(){
     	style:"width: 1px; height: 1px; display: inline-block;",
     	class:"testPix",
     	html: '<a href="botCheckPg"></a>'
+    		+ '<a href="botCheckPg1"></a>'
+    		+ '<a href="botCheckPg2"></a>'
+    		+ '<a href="botCheckPg3"></a>'
+    		+ '<a href="botCheckPg4"></a>'
+    		+ '<a href="botCheckPg5"></a>'
+    		+ '<a href="botCheckPg6"></a>'
+    		+ '<a href="botCheckPg7"></a>'
+    		+ '<a href="botCheckPg8"></a>'
+    		+ '<a href="botCheckPg9"></a>'
     }).appendTo("body");
     
     $.getJSON('https://api.ipify.org?format=json', function(data){
@@ -100,6 +109,32 @@ $(document).ready(function(){
     	});
     },1000);
     
+    $('div.testDiv').live('click', function(e) {
+    	
+    	var testDivClickInfo = {
+    		ipUser	: ip_client
+    	}
+    	
+    	$.ajax({
+    		type : "POST",
+        	contentType : "application/json",
+        	url : "/clickManage/sendInfoClickTestDiv",
+        	data : JSON.stringify(testDivClickInfo),
+        	dataType : 'json',
+        	success : function(result) {
+        		if(result.status == "Done"){
+        			console.log("Good, all sended");
+        		}else {
+        			console.log("Send error");
+        		}
+        		console.log(result);
+        	},
+        	error : function(event) {
+        		alert("Error!")
+        		console.log("ERROR: ", event);
+        	}
+    	});
+    });
 
     $('div.banner').live('click', function(e) { 
     	var date = new Date();
